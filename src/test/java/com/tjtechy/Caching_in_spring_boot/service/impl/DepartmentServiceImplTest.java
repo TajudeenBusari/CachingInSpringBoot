@@ -11,6 +11,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,12 +22,14 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
+
 class DepartmentServiceImplTest {
 
   @Mock
@@ -52,6 +57,7 @@ class DepartmentServiceImplTest {
     department2.setLocation("Lagos");
     department2.setCode("HR-001");
     departmentList.add(department2);
+
   }
 
   @AfterEach
@@ -204,4 +210,21 @@ class DepartmentServiceImplTest {
     //Then
     verify(departmentRepository, times(1)).deleteById(100L);
   }
+
+  @Test
+  void clearAllCache(){
+    departmentService.clearAllCache();
+    // Assert
+    // Since the method only clears the cache and logs a message, we verify it runs without errors
+    assertDoesNotThrow(() -> departmentService.clearAllCache());
+  }
+
+  @Test
+  void clearCache(){
+    departmentService.clearCache(100L);
+    // Assert
+    // Since the method only clears the cache and logs a message, we verify it runs without errors
+    assertDoesNotThrow(() -> departmentService.clearCache(100L));
+  }
+
 }

@@ -12,5 +12,7 @@ public interface DepartmentService {
   List<Department> fetchAllDepartments();
   Department updateDepartment(Long departmentId, Department updateDepartment);
   void deleteDepartment(Long departmentId);
+  void clearAllCache();
+  void clearCache(Long departmentId);
 
 }
