@@ -17,6 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -31,7 +32,19 @@ import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
-@SpringBootTest
+
+/**
+ * //@SpringBootTest
+ * used when testing the entire application context(including the controller, service, repository, etc.)
+ * Loads the entire Spring Boot application context (including database, services, and other dependencies).
+ * Typically used in integration tests.
+ * //@WebMvcTest
+ * used when testing isolated controller layer
+ * Loads only the web layer (controllers, request mappings, validation, etc.).
+ * Faster and more lightweight than @SpringBootTest.
+ * Does not load the database, security, or other beans unless explicitly included.
+ */
+@WebMvcTest(DepartmentController.class) //WebMvcTest is used to test the controller layer
 @AutoConfigureMockMvc
 class DepartmentControllerTest {
 
@@ -217,6 +230,30 @@ class DepartmentControllerTest {
     //when and then
     this.mockMvc.perform(delete(baseUrl + "/department/100").accept(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.message").value("Delete Success"))
+            .andExpect(jsonPath("$.flag").value(true))
+            .andExpect(jsonPath("$.data").isEmpty());
+  }
+
+  @Test
+  void clearAllCacheSuccess() throws Exception {
+    //given
+    doNothing().when(departmentService).clearAllCache();
+
+    //when and then
+    this.mockMvc.perform(get(baseUrl + "/department/clear-cache").accept(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.message").value("Cache Cleared"))
+            .andExpect(jsonPath("$.flag").value(true))
+            .andExpect(jsonPath("$.data").isEmpty());
+  }
+
+  @Test
+  void clearCacheSuccess() throws Exception {
+    //given
+    doNothing().when(departmentService).clearCache(100L);
+
+    //when and then
+    this.mockMvc.perform(get(baseUrl + "/department/clear-cache/100").accept(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.message").value("Cache Cleared for: 100"))
             .andExpect(jsonPath("$.flag").value(true))
             .andExpect(jsonPath("$.data").isEmpty());
   }

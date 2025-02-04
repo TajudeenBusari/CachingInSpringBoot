@@ -41,4 +41,5 @@ public class StatusCode {
     public static final int HTTP_VERSION_NOT_SUPPORTED = 505;
     public static final int VARIANT_ALSO_NEGOTIATES = 506;
     public static final int INSUFFICIENT_STORAGE = 507;
+    public static final int CACHE_CLEARED = 200;
 }

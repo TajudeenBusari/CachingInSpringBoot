@@ -56,6 +56,17 @@ public class DepartmentController {
     return new Result("Delete Success", true, null, StatusCode.SUCCESS);
   }
 
+  @GetMapping("/clear-cache")
+  public Result clearAllCache() {
+    departmentService.clearAllCache();
+    //YOU CAN USE 200K STATUS CODES BUT THIS IS A CUSTOM STATUS CODE
+    return new Result("Cache Cleared", true, null, StatusCode.CACHE_CLEARED);
+  }
 
+  @GetMapping("/clear-cache/{id}")
+  public Result clearCache(@PathVariable Long id) {
+    departmentService.clearCache(id);
+    return new Result("Cache Cleared for: " + id, true, null, StatusCode.CACHE_CLEARED);
+  }
 
 }
